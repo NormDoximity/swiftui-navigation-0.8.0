@@ -2,12 +2,11 @@ import IdentifiedCollections
 import SwiftUI
 import SwiftUINavigation
 
-@Observable
-class InventoryModel {
-  var inventory: IdentifiedArrayOf<ItemRowModel> {
+class InventoryModel: ObservableObject {
+  @Published var inventory: IdentifiedArrayOf<ItemRowModel> {
     didSet { self.bind() }
   }
-  var destination: Destination?
+  @Published var destination: Destination?
 
   enum Destination: Equatable {
     case add(Item)
@@ -70,7 +69,7 @@ class InventoryModel {
 }
 
 struct InventoryView: View {
-  @State var model: InventoryModel
+  @ObservedObject var model: InventoryModel
 
   var body: some View {
     List {
@@ -124,33 +123,31 @@ struct InventoryView: View {
   }
 }
 
-#Preview {
-  let keyboard = Item(
-    color: .blue,
-    name: "Keyboard",
-    status: .inStock(quantity: 100)
-  )
+struct InventoryView_Previews: PreviewProvider {
+  static var previews: some View {
+    let keyboard = Item(color: .blue, name: "Keyboard", status: .inStock(quantity: 100))
 
-  return NavigationStack {
-    InventoryView(
-      model: InventoryModel(
-        inventory: [
-          ItemRowModel(
-            item: keyboard
-          ),
-          ItemRowModel(
-            item: Item(color: .yellow, name: "Charger", status: .inStock(quantity: 20))
-          ),
-          ItemRowModel(
-            item: Item(color: .green, name: "Phone", status: .outOfStock(isOnBackOrder: true))
-          ),
-          ItemRowModel(
-            item: Item(
-              color: .green, name: "Headphones", status: .outOfStock(isOnBackOrder: false)
-            )
-          ),
-        ]
+    NavigationStack {
+      InventoryView(
+         model: InventoryModel(
+          inventory: [
+            ItemRowModel(
+              item: keyboard
+            ),
+            ItemRowModel(
+              item: Item(color: .yellow, name: "Charger", status: .inStock(quantity: 20))
+            ),
+            ItemRowModel(
+              item: Item(color: .green, name: "Phone", status: .outOfStock(isOnBackOrder: true))
+            ),
+            ItemRowModel(
+              item: Item(
+                color: .green, name: "Headphones", status: .outOfStock(isOnBackOrder: false)
+              )
+            ),
+          ]
+        )
       )
-    )
+    }
   }
 }

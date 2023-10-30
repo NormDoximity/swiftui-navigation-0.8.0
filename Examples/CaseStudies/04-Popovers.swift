@@ -2,7 +2,7 @@ import SwiftUI
 import SwiftUINavigation
 
 struct OptionalPopovers: View {
-  @State private var model = FeatureModel()
+  @ObservedObject private var model = FeatureModel()
 
   var body: some View {
     List {
@@ -11,10 +11,10 @@ struct OptionalPopovers: View {
 
         HStack {
           Button("Get number fact") {
-            Task { await self.model.numberFactButtonTapped() }
+            self.model.numberFactButtonTapped()
           }
           .popover(unwrapping: self.$model.fact, arrowEdge: .bottom) { $fact in
-            NavigationStack {
+            NavigationView {
               FactEditor(fact: $fact.description)
                 .disabled(self.model.isLoading)
                 .foregroundColor(self.model.isLoading ? .gray : nil)
@@ -63,40 +63,35 @@ private struct FactEditor: View {
   }
 }
 
-@Observable
-private class FeatureModel {
-  var count = 0
-  var fact: Fact?
-  var isLoading = false
-  var savedFacts: [Fact] = []
-  private var task: Task<Void, Never>?
+@MainActor
+private class FeatureModel: ObservableObject {
+  @Published var count = 0
+  @Published var fact: Fact?
+  @Published var isLoading = false
+  @Published var savedFacts: [Fact] = []
+  private var task: Task<Void, Error>?
 
   deinit {
     self.task?.cancel()
   }
 
-  @MainActor
-  func numberFactButtonTapped() async {
+  func numberFactButtonTapped() {
     self.isLoading = true
     self.fact = Fact(description: "\(self.count) is still loading...", number: self.count)
     self.task = Task {
       let fact = await getNumberFact(self.count)
       self.isLoading = false
-      guard !Task.isCancelled
-      else { return }
+      try Task.checkCancellation()
       self.fact = fact
     }
-    await self.task?.value
   }
 
-  @MainActor
   func cancelButtonTapped() {
     self.task?.cancel()
     self.task = nil
     self.fact = nil
   }
 
-  @MainActor
   func saveButtonTapped(fact: Fact) {
     self.task?.cancel()
     self.task = nil
@@ -104,12 +99,7 @@ private class FeatureModel {
     self.fact = nil
   }
 
-  @MainActor
   func removeSavedFacts(atOffsets offsets: IndexSet) {
     self.savedFacts.remove(atOffsets: offsets)
   }
-}
-
-#Preview {
-  OptionalPopovers()
 }

@@ -3,7 +3,7 @@ import SwiftUINavigation
 
 struct RootView: View {
   var body: some View {
-    NavigationStack {
+    NavigationView {
       List {
         Section {
           NavigationLink("Optional-driven alerts") {
@@ -40,6 +40,9 @@ struct RootView: View {
           NavigationLink("Optional navigation links") {
             OptionalNavigationLinks()
           }
+          NavigationLink("List of navigation links") {
+            ListOfNavigationLinks(model: ListOfNavigationLinksModel())
+          }
         } header: {
           Text("Navigation links")
         }
@@ -66,6 +69,7 @@ struct RootView: View {
       }
       .navigationTitle("Case studies")
     }
+    .navigationViewStyle(.stack)
   }
 }
 

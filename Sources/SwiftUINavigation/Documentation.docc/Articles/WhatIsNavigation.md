@@ -65,9 +65,8 @@ For example, suppose you have a list of items, and when one is tapped you want t
 sheet for editing the item:
 
 ```swift
-@Observable
-class FeatureModel {
-  var editingItem: Item?
+class FeatureModel: ObservableObject {
+  @Published var editingItem: Item?
   func tapped(item: Item) {
     self.editingItem = item
   }
@@ -143,12 +142,11 @@ item and duplicate an item, and you can navigate to a help screen. That can tech
 represented as four optionals:
 
 ```swift
-@Observable
-class FeatureModel {
-  var addItem: Item?
-  var duplicateItem: Item?
-  var editingItem: Item?
-  var help: Help?
+class FeatureModel: ObservableObject {
+  @Published var addItem: Item?
+  @Published var duplicateItem: Item?
+  @Published var editingItem: Item?
+  @Published var help: Help?
   // ...
 }
 ```
@@ -168,9 +166,8 @@ each destination, and then hold onto a single optional value to represent which 
 is currently active:
 
 ```swift
-@Observable
-class FeatureModel {
-  var destination: Destination?
+class FeatureModel: ObservableObject {
+  @Published var destination: Destination?
   // ...
 
   enum Destination {
@@ -225,9 +222,8 @@ Similar APIs are defined for popovers, covers, and more.
 For example, consider a feature model that has 3 different destinations that can be navigated to:
 
 ```swift
-@Observable
-class FeatureModel {
-  var destination: Destination?
+class FeatureModel: ObservableObject {
+  @Published var destination: Destination?
   // ...
 
   enum Destination {

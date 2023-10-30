@@ -57,7 +57,7 @@ reading these articles:
   Learn how to present alerts and confirmation dialogs in a concise and testable manner.
   
 * **[Bindings][bindings]**:
-  Learn how to manage certain view state, such as `@FocusState` directly in your observable classes.
+  Learn how to manage certain view state, such as `@FocusState` directly in your observable object.
   
 ## Examples
 
@@ -104,7 +104,7 @@ it's as simple as adding it to a `dependencies` clause in your `Package.swift`:
 
 ``` swift
 dependencies: [
-  .package(url: "https://github.com/pointfreeco/swiftui-navigation", from: "1.0.0")
+  .package(url: "https://github.com/pointfreeco/swiftui-navigation", from: "0.7.1")
 ]
 ```
 

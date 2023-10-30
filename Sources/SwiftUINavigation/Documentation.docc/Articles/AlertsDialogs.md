@@ -15,8 +15,7 @@ your model, as well as an enum that describes every action that can happen in th
 
 
 ```swift
-@Observable
-class FeatureModel {
+class FeatureModel: ObservableObject {
   var alert: AlertState<AlertAction>?
   enum AlertAction {
     case deletionConfirmed
@@ -111,8 +110,7 @@ In such a case:
 
 
 ```swift
-@Observable
-class FeatureModel {
+class FeatureModel: ObservableObject {
   var destination: Destination?
   enum Destination {
     case alert(AlertState<AlertAction>)
@@ -147,8 +145,7 @@ of alerts.
 For example, the model for a delete confirmation could look like this:
 
 ```swift
-@Observable
-class FeatureModel {
+class FeatureModel: ObservableObject {
   var dialog: ConfirmationDialogState<DialogAction>?
   enum DialogAction {
     case deletionConfirmed

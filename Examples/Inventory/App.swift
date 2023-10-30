@@ -28,10 +28,9 @@ struct InventoryApp: App {
   }
 }
 
-@Observable
-class AppModel {
-  var inventoryModel: InventoryModel
-  var selectedTab: Tab
+class AppModel: ObservableObject {
+  @Published var inventoryModel: InventoryModel
+  @Published var selectedTab: Tab
 
   init(
     inventoryModel: InventoryModel,
@@ -48,7 +47,7 @@ class AppModel {
 }
 
 struct AppView: View {
-  @State var model: AppModel
+  @ObservedObject var model: AppModel
 
   var body: some View {
     TabView(selection: self.$model.selectedTab) {
@@ -71,8 +70,4 @@ struct AppView: View {
       }
     }
   }
-}
-
-#Preview {
-  AppView(model: AppModel(inventoryModel: InventoryModel()))
 }

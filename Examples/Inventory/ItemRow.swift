@@ -2,10 +2,9 @@ import SwiftUI
 import SwiftUINavigation
 import XCTestDynamicOverlay
 
-@Observable
-class ItemRowModel: Identifiable {
-  var item: Item
-  var destination: Destination?
+class ItemRowModel: Identifiable, ObservableObject {
+  @Published var item: Item
+  @Published var destination: Destination?
 
   enum Destination: Equatable {
     case alert(AlertState<AlertAction>)
@@ -74,7 +73,7 @@ extension Item {
 }
 
 struct ItemRowView: View {
-  @State var model: ItemRowModel
+  @ObservedObject var model: ItemRowModel
 
   var body: some View {
     Button {
@@ -143,18 +142,5 @@ struct ItemRowView: View {
         .frame(minWidth: 300, minHeight: 500)
       }
     }
-  }
-}
-
-#Preview {
-  List {
-    ItemRowView(
-      model: ItemRowModel(
-        item: Item(
-          name: "Keyboard",
-          status: .inStock(quantity: 42)
-        )
-      )
-    )
   }
 }

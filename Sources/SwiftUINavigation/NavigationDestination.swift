@@ -1,4 +1,4 @@
-#if swift(>=5.7) && canImport(SwiftUI)
+#if swift(>=5.7)
   import SwiftUI
 
   @available(iOS 16, macOS 13, tvOS 16, watchOS 9, *)
@@ -100,11 +100,8 @@
   }
 
   private let requiresBindWorkaround = {
-    if #available(iOS 17, macOS 14, tvOS 17, watchOS 10, *) {
-      return true
-    }
     guard #available(iOS 16.4, macOS 13.3, tvOS 16.4, watchOS 9.4, *)
     else { return true }
     return false
   }()
-#endif  // swift(>=5.7) && canImport(SwiftUI)
+#endif

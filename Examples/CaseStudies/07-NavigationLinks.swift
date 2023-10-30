@@ -2,7 +2,7 @@ import SwiftUI
 import SwiftUINavigation
 
 struct OptionalNavigationLinks: View {
-  @State private var model = FeatureModel()
+  @ObservedObject private var model = FeatureModel()
 
   var body: some View {
     List {
@@ -10,8 +10,27 @@ struct OptionalNavigationLinks: View {
         Stepper("Number: \(self.model.count)", value: self.$model.count)
 
         HStack {
-          Button("Get number fact") {
-            Task { await self.model.setFactNavigation(isActive: true) }
+          NavigationLink(unwrapping: self.$model.fact) {
+            self.model.setFactNavigation(isActive: $0)
+          } destination: { $fact in
+            FactEditor(fact: $fact.description)
+              .disabled(self.model.isLoading)
+              .foregroundColor(self.model.isLoading ? .gray : nil)
+              .navigationBarBackButtonHidden(true)
+              .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                  Button("Cancel") {
+                    self.model.cancelButtonTapped()
+                  }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                  Button("Save") {
+                    self.model.saveButtonTapped(fact: fact)
+                  }
+                }
+              }
+          } label: {
+            Text("Get number fact")
           }
 
           if self.model.isLoading {
@@ -32,24 +51,6 @@ struct OptionalNavigationLinks: View {
         Text("Saved Facts")
       }
     }
-    .navigationDestination(unwrapping: self.$model.fact) { $fact in
-      FactEditor(fact: $fact.description)
-        .disabled(self.model.isLoading)
-        .foregroundColor(self.model.isLoading ? .gray : nil)
-        .navigationBarBackButtonHidden(true)
-        .toolbar {
-          ToolbarItem(placement: .cancellationAction) {
-            Button("Cancel") {
-              Task { await self.model.cancelButtonTapped() }
-            }
-          }
-          ToolbarItem(placement: .confirmationAction) {
-            Button("Save") {
-              Task { await self.model.saveButtonTapped(fact: fact) }
-            }
-          }
-        }
-    }
     .navigationTitle("Links")
   }
 }
@@ -66,31 +67,28 @@ private struct FactEditor: View {
   }
 }
 
-@Observable
-private class FeatureModel {
-  var count = 0
-  var fact: Fact?
-  var isLoading = false
-  var savedFacts: [Fact] = []
-  private var task: Task<Void, Never>?
+@MainActor
+private class FeatureModel: ObservableObject {
+  @Published var count = 0
+  @Published var fact: Fact?
+  @Published var isLoading = false
+  @Published var savedFacts: [Fact] = []
+  private var task: Task<Void, Error>?
 
   deinit {
     self.task?.cancel()
   }
 
-  @MainActor
-  func setFactNavigation(isActive: Bool) async {
+  func setFactNavigation(isActive: Bool) {
     if isActive {
       self.isLoading = true
       self.fact = Fact(description: "\(self.count) is still loading...", number: self.count)
       self.task = Task {
         let fact = await getNumberFact(self.count)
         self.isLoading = false
-        guard !Task.isCancelled
-        else { return }
+        try Task.checkCancellation()
         self.fact = fact
       }
-      await self.task?.value
     } else {
       self.task?.cancel()
       self.task = nil
@@ -98,25 +96,16 @@ private class FeatureModel {
     }
   }
 
-  @MainActor
-  func cancelButtonTapped() async {
-    await self.setFactNavigation(isActive: false)
+  func cancelButtonTapped() {
+    self.setFactNavigation(isActive: false)
   }
 
-  @MainActor
-  func saveButtonTapped(fact: Fact) async {
+  func saveButtonTapped(fact: Fact) {
     self.savedFacts.append(fact)
-    await self.setFactNavigation(isActive: false)
+    self.setFactNavigation(isActive: false)
   }
 
-  @MainActor
   func removeSavedFacts(atOffsets offsets: IndexSet) {
     self.savedFacts.remove(atOffsets: offsets)
-  }
-}
-
-#Preview {
-  NavigationStack {
-    OptionalNavigationLinks()
   }
 }

@@ -90,8 +90,16 @@ struct ItemView: View {
   }
 }
 
-#Preview {
-  WithState(initialValue: Item(color: nil, name: "", status: .inStock(quantity: 1))) { $item in
-    ItemView(item: $item)
+struct ItemView_Previews: PreviewProvider, View {
+  @State var item = Item(color: nil, name: "", status: .inStock(quantity: 1))
+
+  static var previews: some View {
+    NavigationStack {
+      ItemView_Previews()
+    }
+  }
+
+  var body: some View {
+    ItemView(item: self.$item)
   }
 }

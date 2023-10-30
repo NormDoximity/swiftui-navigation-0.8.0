@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/pointfreeco/swift-case-paths",
         "state": {
           "branch": null,
-          "revision": "5da6989aae464f324eef5c5b52bdb7974725ab81",
-          "version": "1.0.0"
+          "revision": "c3a42e8d1a76ff557cf565ed6d8b0aee0e6e75af",
+          "version": "0.11.0"
         }
       },
       {
@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/pointfreeco/swift-custom-dump",
         "state": {
           "branch": null,
-          "revision": "edd66cace818e1b1c6f1b3349bb1d8e00d6f8b01",
-          "version": "1.0.0"
+          "revision": "819d9d370cd721c9d87671e29d947279292e4541",
+          "version": "0.6.0"
         }
       },
       {
@@ -24,16 +24,7 @@
         "repositoryURL": "https://github.com/apple/swift-docc-plugin",
         "state": {
           "branch": null,
-          "revision": "26ac5758409154cc448d7ab82389c520fa8a8247",
-          "version": "1.3.0"
-        }
-      },
-      {
-        "package": "SymbolKit",
-        "repositoryURL": "https://github.com/apple/swift-docc-symbolkit",
-        "state": {
-          "branch": null,
-          "revision": "b45d1f2ed151d057b54504d653e0da5552844e34",
+          "revision": "3303b164430d9a7055ba484c8ead67a52f7b74f6",
           "version": "1.0.0"
         }
       },
@@ -42,8 +33,8 @@
         "repositoryURL": "https://github.com/pointfreeco/xctest-dynamic-overlay",
         "state": {
           "branch": null,
-          "revision": "23cbf2294e350076ea4dbd7d5d047c1e76b03631",
-          "version": "1.0.2"
+          "revision": "a9daebf0bf65981fd159c885d504481a65a75f02",
+          "version": "0.8.0"
         }
       }
     ]

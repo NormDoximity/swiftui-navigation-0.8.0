@@ -10,7 +10,7 @@ private let readMe = """
 
 struct SynchronizedBindings: View {
   @FocusState private var focusedField: FeatureModel.Field?
-  @State private var model = FeatureModel()
+  @ObservedObject private var model = FeatureModel()
 
   var body: some View {
     Form {
@@ -37,16 +37,15 @@ struct SynchronizedBindings: View {
   }
 }
 
-@Observable
-private class FeatureModel {
+private class FeatureModel: ObservableObject {
   enum Field: String {
     case username
     case password
   }
 
-  var focusedField: Field? = .username
-  var password: String = ""
-  var username: String = ""
+  @Published var focusedField: Field? = .username
+  @Published var password: String = ""
+  @Published var username: String = ""
 
   func signInButtonTapped() {
     if self.username.isEmpty {
@@ -59,6 +58,8 @@ private class FeatureModel {
   }
 }
 
-#Preview {
-  SynchronizedBindings()
+struct SynchronizedBindings_Previews: PreviewProvider {
+  static var previews: some View {
+    SynchronizedBindings()
+  }
 }
